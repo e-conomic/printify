@@ -31,6 +31,18 @@ window.printify = function() {
 				};
 				return;
 			}
+			if (typeof val === 'string') {
+				options[key] = function() {
+					return val;
+				};
+				return;
+			}
+			if (typeof val === 'object' && typeof val.html === 'function') {
+				options[key] = function() {
+					return val.html();
+				};
+				return;
+			}
 		});
 
 		var pageHeight = (options.page && options.page[1]) || A4_PAGE_HEIGHT;
