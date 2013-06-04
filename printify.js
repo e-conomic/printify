@@ -23,71 +23,103 @@ window.printify = function() {
 		options.left = options.left || noop;
 		options.right = options.right || noop;
 
-		['left', 'right', 'top', 'bottom'].forEach(function(key) {
-			var val = options[key];
+		var overload = function(val) {
 			if (typeof val === 'number') {
-				options[key] = function() {
+				return function() {
 					return '<div style="width:'+val+'px; height:'+val+'px;"></div>';
 				};
-				return;
 			}
 			if (typeof val === 'string') {
-				options[key] = function() {
+				return function() {
 					return val;
 				};
-				return;
 			}
 			if (typeof val === 'object' && typeof val.html === 'function') {
-				options[key] = function() {
+				return function() {
 					return val.html();
 				};
-				return;
 			}
+			return val;
+		};
+
+		['left', 'right', 'top', 'bottom'].forEach(function(key) {
+			options[key] = overload(options[key]);
 		});
 
-		var pageHeight = (options.page && options.page[1]) || A4_PAGE_HEIGHT;
-		var pageWidth = (options.page && options.page[0]) || A4_PAGE_WIDTH;
+		var pageHeight = options.pageHeight || A4_PAGE_HEIGHT;
+		var pageWidth = options.pageWidth || A4_PAGE_WIDTH;
+		var spacing = options.spacing || 0;
 
 		var $content = $(content);
 		$content.width(pageWidth);
 		$content.css('position', 'absolute');
 
+		var contentOffset = $content.offset().top;
+		var boxHeight = pageHeight + spacing;
+
 		var update = function() {
-			var prev;
-			return Array.prototype.slice.apply($('.page-break:not(.broken)')).some(function(el) {
-				if (el.offsetTop > nextBreak && prev) {
+			var $prev;
+			return Array.prototype.slice.apply($('.page-break:not(.page-break-visited)')).some(function(el) {
+				var $el = $(el);
+				if ($el.offset().top - contentOffset > nextBreak && $prev) {
 					var $top = $('<div class="page-top">'+(options.top(nextPage) || '')+'</div>').appendTo($content);
 					var $bottom = $('<div class="page-bottom">'+(options.bottom(nextPage) || '')+'</div>').appendTo($content);
 					var $left = $('<div class="page-left">'+(options.left(nextPage) || '')+'</div>').appendTo($content);
 					var $right = $('<div class="page-right">'+(options.right(nextPage) || '')+'</div>').appendTo($content);
 
-					var pageTop = nextPage * pageHeight;
-					var pageTopNext = (nextPage + 1) * pageHeight;
+					var currentSpacing = nextPage ? spacing : 0;
 
-					$left.add($right).css({position:'absolute', top:pageTop});
+					var pageTop = nextPage * boxHeight - currentSpacing;
+					var pageTopNext = (nextPage + 1) * boxHeight - spacing;
+
+					$left.add($right).css({position:'absolute'});
 
 					$left.css({left:-$left.width()});
 					$right.css({right:-$right.width()});
 
-					$top.add($bottom).css({position:'absolute', width:pageWidth, left:-$left.width()});
+					$top.add($bottom).css({
+						position:'absolute',
+						width:pageWidth,
+						left:-$left.width()
+					});
 
-					$top.css({top:pageTop});
+					$top.css({top:pageTop + currentSpacing});
 					$bottom.css({top:pageTopNext - $bottom.height()});
 
-					$left.add($right).css({top:pageTop+$top.height(), height:pageTopNext - $bottom.height() - (pageTop + $top.height())});
+					$left.add($right).css({
+						top:pageTop + $top.height() + currentSpacing,
+						height:pageTopNext - $bottom.height() - (pageTop + $top.height())
+					});
 
-					$content.css({marginLeft:$left.width(), width:pageWidth-$left.width()-$right.width()});
+					$content.css({
+						marginLeft:$left.width(),
+						width:pageWidth-$left.width()-$right.width()
+					});
 
-					prev.style.height = ($top.height() + pageTop - prev.offsetTop)+'px';
-					$(el).removeClass('broken');
+					var breakHeight = currentSpacing + $top.height() + pageTop - ($prev.offset().top - contentOffset);
+					$prev.height(breakHeight).addClass('page-actual-break');
+					$el.removeClass('page-break-visited');
+
+					if (options.frame) {
+						var $frame = $('<div></div>');
+						$frame.addClass('page-frame').css({
+							position:'absolute',
+							zIndex:-1,
+							top:pageTop+currentSpacing,
+							left:-$left.width(),
+							width:pageWidth,
+							height:pageHeight
+						});
+						$frame.appendTo($content);
+					}
 
 					nextPage++;
 					nextBreak = pageTopNext - $bottom.height();
 
 					return true;
 				}
-				$(el).addClass('broken');
-				prev = el;
+				$el.addClass('page-break-visited');
+				$prev = $el;
 			});
 		};
 
@@ -99,23 +131,15 @@ window.printify = function() {
 		}
 
 		$content.find('.page-bottom, .page-top, .page-left, .page-right').remove();
-		$content.find('.page-break').removeClass('broken');
+		$content.find('.page-actual-break').removeClass('page-actual-break').height(0);
+		$content.find('.page-break-visited').removeClass('page-break-visited').removeClass('.page-actual-break');
 
 		while (update());
 
 		return {
 			pageWidth: pageWidth,
 			pageHeight: pageHeight,
-			pages: nextPage,
-			page: function(num) {
-				num = num || 0;
-				return $('<div></div>').css({
-					overflow:'hidden',
-					height: pageHeight,
-					width: pageWidth,
-					position: 'relative'
-				}).append($content.clone().css('margin-top',-pageHeight*num));
-			}
+			pages: nextPage
 		};
 	};
 }();
