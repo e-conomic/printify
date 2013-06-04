@@ -867,20 +867,22 @@
 		</div>
 	</div>
 	<script>
-		var converter = window.navigator.userAgent.indexOf('converter') > -1 || window.location.toString().indexOf('#print') > -1;
+		if (window.location.toString().indexOf('#no') === -1) {
+			var converter = window.navigator.userAgent.indexOf('converter') > -1 || window.location.toString().indexOf('#print') > -1;
 
-		window.page = printify('.invoice', {
-			bottom: '<div class="footer"><hr/>Cool-Soft  Reverdilsgade 7 1 th E-Mail: mha@cool-soft.dk</div>',
-			left: '<div class="watermark-wrapper"><div class="watermark">Mit www.debitoor.de erstellt</div></div>',
-			right: 80,
-			top: 100,
-			spacing: !converter && 20,
-			frame: !converter
-		});
+			window.page = printify('.invoice', {
+				bottom: '<div class="footer"><hr/>Cool-Soft  Reverdilsgade 7 1 th E-Mail: mha@cool-soft.dk</div>',
+				left: '<div class="watermark-wrapper"><div class="watermark">Mit www.debitoor.de erstellt</div></div>',
+				right: 80,
+				top: 100,
+				spacing: !converter && 20,
+				frame: !converter
+			});
 
-		if (!converter) {
-			$('body').css({backgroundColor:'#ccc'});
-			$('.wrapper').css({margin:'auto', width:window.page.width});
+			if (!converter) {
+				$('body').css({backgroundColor:'#ccc'});
+				$('.wrapper').css({margin:'auto', width:window.page.width});
+			}
 		}
 	</script>
 </body>
