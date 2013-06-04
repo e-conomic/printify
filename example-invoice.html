@@ -681,7 +681,7 @@
 		</div>
 	</div>
 	<script>
-		var converter = window.navigator.userAgent.indexOf('converter') > -1;
+		var converter = window.navigator.userAgent.indexOf('converter') > -1 || window.location.toString().indexOf('#print') > -1;
 
 		window.page = printify('.invoice', {
 			bottom: '<div class="footer"><hr/>Cool-Soft  Reverdilsgade 7 1 th E-Mail: mha@cool-soft.dk</div>',
