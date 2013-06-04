@@ -94,8 +94,15 @@ window.printify = function() {
 		return {
 			pageWidth: pageWidth,
 			pageHeight: pageHeight,
+			pages: nextPage,
 			page: function(num) {
-				return $('<div></div>').append($content.clone()).html();
+				num = num || 0;
+				return $('<div></div>').css({
+					overflow:'hidden',
+					height: pageHeight,
+					width: pageWidth,
+					position: 'relative'
+				}).append($content.clone().css('margin-top',-pageHeight*num));
 			}
 		};
 	};
