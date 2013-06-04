@@ -130,7 +130,7 @@ window.printify = function() {
 
 		$content.find('.page-bottom, .page-top, .page-left, .page-right').remove();
 		$content.find('.page-actual-break').removeClass('page-actual-break').height(0);
-		$content.find('.page-break-visited').removeClass('page-break-visited').removeClass('.page-actual-break');
+		$content.find('.page-break-visited').removeClass('page-break-visited');
 
 		while (update());
 
