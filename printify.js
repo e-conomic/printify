@@ -18,12 +18,9 @@ window.printify = function() {
 		}
 
 		options = options || {};
-		options.bottom = options.bottom || noop;
-		options.top = options.top || noop;
-		options.left = options.left || noop;
-		options.right = options.right || noop;
 
 		var overload = function(val) {
+			if (!val) return noop;
 			if (typeof val === 'number') {
 				return function() {
 					return '<div style="width:'+val+'px; height:'+val+'px;"></div>';
