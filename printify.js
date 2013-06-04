@@ -67,10 +67,8 @@ window.printify = function() {
 					var $left = $('<div class="page-left">'+(options.left(nextPage) || '')+'</div>').appendTo($content);
 					var $right = $('<div class="page-right">'+(options.right(nextPage) || '')+'</div>').appendTo($content);
 
-					var currentSpacing = nextPage ? spacing : 0;
-
-					var pageTop = nextPage * boxHeight - currentSpacing;
-					var pageTopNext = (nextPage + 1) * boxHeight - spacing;
+					var pageTop = nextPage * boxHeight;
+					var pageTopNext = (nextPage + 1) * boxHeight;
 
 					$left.add($right).css({position:'absolute'});
 
@@ -83,11 +81,11 @@ window.printify = function() {
 						left:-$left.width()
 					});
 
-					$top.css({top:pageTop + currentSpacing});
+					$top.css({top:pageTop + spacing});
 					$bottom.css({top:pageTopNext - $bottom.height()});
 
 					$left.add($right).css({
-						top:pageTop + $top.height() + currentSpacing,
+						top:pageTop + $top.height() + spacing,
 						height:pageTopNext - $bottom.height() - (pageTop + $top.height())
 					});
 
@@ -96,7 +94,7 @@ window.printify = function() {
 						width:pageWidth-$left.width()-$right.width()
 					});
 
-					var breakHeight = currentSpacing + $top.height() + pageTop - ($prev.offset().top - contentOffset);
+					var breakHeight = spacing + $top.height() + pageTop - ($prev.offset().top - contentOffset);
 					$prev.height(breakHeight).addClass('page-actual-break');
 					$el.removeClass('page-break-visited');
 
@@ -105,7 +103,7 @@ window.printify = function() {
 						$frame.addClass('page-frame').css({
 							position:'absolute',
 							zIndex:-1,
-							top:pageTop+currentSpacing,
+							top:pageTop+spacing,
 							left:-$left.width(),
 							width:pageWidth,
 							height:pageHeight
@@ -136,9 +134,13 @@ window.printify = function() {
 
 		while (update());
 
+		$content.height(boxHeight * nextPage+spacing);
+
 		return {
 			pageWidth: pageWidth,
 			pageHeight: pageHeight,
+			width: pageWidth,
+			height: $content.height(),
 			pages: nextPage
 		};
 	};
