@@ -25,8 +25,7 @@
 
 		.watermark-wrapper {
 			width: 80px;
-			position: relative;
-			top: 250px;
+			height: 100%;
 		}
 		.watermark {
 			position: relative;
@@ -35,7 +34,7 @@
 			text-align: center;
 			width: 220px;
 			left: -90px;
-			top: 100px;
+			top: 50%;
 		}
 
 		.box-line.first, .page-actual-break + .box-line {
@@ -876,7 +875,10 @@
 				right: 80,
 				top: 100,
 				spacing: !converter && 20,
-				frame: !converter
+				frame: !converter,
+				pageBreak: function($el, i) {
+					if (i) $el.next().css('background-color', '#f5f5f5');
+				}
 			});
 
 			if (!converter) {

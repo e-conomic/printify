@@ -46,6 +46,7 @@ window.printify = function() {
 		var pageHeight = options.pageHeight || A4_PAGE_HEIGHT;
 		var pageWidth = options.pageWidth || A4_PAGE_WIDTH;
 		var spacing = options.spacing || 0;
+		var onbreak = options.pageBreak || noop;
 
 		var $content = $(content);
 		$content.width(pageWidth);
@@ -74,17 +75,16 @@ window.printify = function() {
 
 					$top.add($bottom).css({
 						position:'absolute',
-						width:pageWidth,
-						left:-$left.width()
+						width:pageWidth-$right.width()-$left.width(),
+					});
+
+					$left.add($right).css({
+						top:pageTop + spacing,
+						height:pageTopNext - pageTop
 					});
 
 					$top.css({top:pageTop + spacing});
 					$bottom.css({top:pageTopNext - $bottom.height()});
-
-					$left.add($right).css({
-						top:pageTop + $top.height() + spacing,
-						height:pageTopNext - $bottom.height() - (pageTop + $top.height())
-					});
 
 					$content.css({
 						marginLeft:$left.width(),
@@ -107,6 +107,8 @@ window.printify = function() {
 						});
 						$frame.appendTo($content);
 					}
+
+					onbreak($prev, nextPage);
 
 					nextPage++;
 					nextBreak = pageTopNext - $bottom.height();
