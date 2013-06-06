@@ -1,6 +1,5 @@
 window.printify = function() {
-	var A4_PAGE_HEIGHT;
-	var A4_PAGE_WIDTH;
+	var dimensions = {};
 
 	var noop = function() {};
 	var until = function(list, fn) {
@@ -10,18 +9,18 @@ window.printify = function() {
 		return false;
 	};
 
+	var pixels = function(cm) {
+		if (typeof cm === 'number') return cm;
+		if (dimensions[cm]) return dimensions[cm];
+		var $dim = $('<div style="top:-10000px;left:-10000px;position:absolute;width:'+cm+';height:1px;"></div>').appendTo('body');
+		dimensions[cm] = $dim.width();
+		$dim.remove();
+		return dimensions[cm];
+	};
+
 	return function(content, options) {
 		var nextPage = 0;
 		var nextBreak = 0;
-
-		if (A4_PAGE_WIDTH === undefined) {
-			var $dim = $('<div style="top:-10000px;left:-10000px;position:absolute;width:21cm;height:29.7cm;"></div>').appendTo('body');
-
-			A4_PAGE_WIDTH = $dim.width();
-			A4_PAGE_HEIGHT = $dim.height();
-
-			$dim.remove();
-		}
 
 		options = options || {};
 
@@ -49,10 +48,16 @@ window.printify = function() {
 			options[key] = overload(options[key]);
 		});
 
-		var pageHeight = options.pageHeight || A4_PAGE_HEIGHT;
-		var pageWidth = options.pageWidth || A4_PAGE_WIDTH;
+		var pageHeight = pixels(options.pageHeight || '29.7cm');
+		var pageWidth = pixels(options.pageWidth || '21cm');
 		var spacing = options.spacing || 0;
 		var onbreak = options.pageBreak || noop;
+
+		if (options.landscape) {
+			var tmp = pageHeight;
+			pageHeight = pageWidth
+			pageWidth = tmp;
+		}
 
 		var $content = $(content);
 		$content.width(pageWidth);

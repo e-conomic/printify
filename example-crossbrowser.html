@@ -876,6 +876,7 @@
 				top: 100,
 				spacing: !converter && 20,
 				frame: !converter,
+				landscape: window.location.toString().indexOf('landscape') > -1,
 				pageBreak: function($el, i) {
 					if (i) $el.next().css('background-color', '#f5f5f5');
 				}
