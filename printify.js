@@ -3,6 +3,12 @@ window.printify = function() {
 	var A4_PAGE_WIDTH;
 
 	var noop = function() {};
+	var until = function(list, fn) {
+		for (var i = 0; i < list.length; i++) {
+			if (fn(list[i])) return true;
+		}
+		return false;
+	};
 
 	return function(content, options) {
 		var nextPage = 0;
@@ -57,7 +63,7 @@ window.printify = function() {
 
 		var update = function() {
 			var $prev;
-			return Array.prototype.slice.apply($('.page-break:not(.page-break-visited)')).some(function(el) {
+			return until(Array.prototype.slice.apply($('.page-break:not(.page-break-visited)')), function(el) {
 				var $el = $(el);
 				if ($el.offset().top - contentOffset > nextBreak && $prev) {
 					var $top = $('<div class="page-top">'+(options.top(nextPage) || '')+'</div>').appendTo($content);
