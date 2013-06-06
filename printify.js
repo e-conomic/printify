@@ -39,7 +39,7 @@ window.printify = function() {
 			return val;
 		};
 
-		['left', 'right', 'top', 'bottom'].forEach(function(key) {
+		$.each(['left', 'right', 'top', 'bottom'], function(key) {
 			options[key] = overload(options[key]);
 		});
 
