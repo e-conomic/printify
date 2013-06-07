@@ -22,6 +22,10 @@
 			margin: auto;
 		}
 
+		.info {
+			margin-bottom: 50px;
+		}
+
 		.notice {
 			margin-top: 30px;
 			height: 40px;
@@ -45,7 +49,26 @@
 <body>
 	<div class="center">
 		<div class="doc">
-			<h1>This is a headline for my document</h1>
+			<h1>Printify makes pdf printing easy</h1>
+			<div class="info">
+				<p>
+					Printify allows you to create your pages using html and not worry about page breaks, footers, headers, etc.
+				</p>
+				<ul>
+					<li><a href="#">See this document in in preview mode</a></li>
+				</ul>
+				<ul>
+					<li><a href="#raw">See this document without printify rendering</a></li>
+				</ul>
+				<ul>
+					<li><a href="#print">See this document as the converter would see it</a></li>
+				</ul>
+				<ul>
+					<li><a href="#landscape">See this document in landscape mode</a></li>
+				</ul>
+			</div>
+			<div class="page-break"></div>
+			<h2>Here comes some example text</h2>
 			<p>
 				Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
 				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
@@ -327,6 +350,12 @@
 		</div>
 	</div>
 	<script>(function() {
+		$('a').on('click', function() {
+			setTimeout(function() {
+				window.location.reload();
+			}, 10);
+		});
+
 		var opt = function(name) {
 			return (window.location.hash || '').indexOf(name) > -1 || (window.location.search || '').indexOf(name) > -1;
 		};
