@@ -1,6 +1,6 @@
 # Printify
 
-Easy HTML print formatting
+Easy HTML print formatting. [Preview here](https://e-conomic.github.io/printify)
 
 ## Usage
 
@@ -14,6 +14,7 @@ printify('#my-content');
 
 You can add `<div class="page-break"></div>` in your content to indicate that this is an acceptible place to break the page.
 Printify will automagically find these breaks and use them if a page break them would be nessary when printing a page.
+If it decides to use a page-break it will add `page-actual-break` as a css class to it.
 
 You can also add `left`, `top`, `right` or `bottom` static html content to every page by specifying these in the option map to printify
 
