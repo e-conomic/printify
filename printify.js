@@ -138,6 +138,7 @@ window.printify = function() {
 			$content.append('<div class="page-break page-break-last"></div>');
 		}
 
+		$content.find('.page-frame').remove();
 		$content.find('.page-bottom, .page-top, .page-left, .page-right').remove();
 		$content.find('.page-actual-break').removeClass('page-actual-break').height(0);
 		$content.find('.page-break-visited').removeClass('page-break-visited');
