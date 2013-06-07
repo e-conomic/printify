@@ -152,7 +152,10 @@ window.printify = function() {
 			pageHeight: pageHeight,
 			width: pageWidth,
 			height: $content.height(),
-			pages: nextPage
+			pages: nextPage,
+			render: function() {
+				return printify(content, options);
+			}
 		};
 	};
 }();
