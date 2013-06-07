@@ -349,39 +349,43 @@
 			<div class="page-break"></div>
 		</div>
 	</div>
-	<script>(function() {
-		$('a').on('click', function() {
-			setTimeout(function() {
-				window.location.reload();
-			}, 10);
-		});
+	<script>
+		window.render = function() {
+			$('a').on('click', function() {
+				setTimeout(function() {
+					window.location.reload();
+				}, 10);
+			});
 
-		var opt = function(name) {
-			return (window.location.hash || '').indexOf(name) > -1 || (window.location.search || '').indexOf(name) > -1;
+			var opt = function(name) {
+				return (window.location.hash || '').indexOf(name) > -1 || (window.location.search || '').indexOf(name) > -1;
+			};
+
+			if (opt('raw')) return;
+
+			var isConverter = window.navigator.userAgent.indexOf('converter') > -1 || opt('print');
+
+			var page = printify('.doc', {
+				top:'<div class="notice">This is an example HTML document rendered by <a href="https://github.com/e-conomic/printify">printify</a></div>',
+				left:30,
+				bottom: function(page) {
+					return '<div class="page-number">This is page '+(page+1)+'</div>'
+				},
+				right:30,
+				frame:isConverter ? 0 : true,
+				spacing:isConverter ? 0 : 20,
+				landscape: opt('landscape')
+			});
+
+			if (!isConverter) {
+				$('body, html').css('background-color','#ccc');
+				$('.center').width(page.width);
+			}
+
+			window.status = 'ready';
 		};
 
-		if (opt('raw')) return;
-
-		var isConverter = window.navigator.userAgent.indexOf('converter') > -1 || opt('print');
-
-		var page = printify('.doc', {
-			top:'<div class="notice">This is an example HTML document rendered by <a href="https://github.com/e-conomic/printify">printify</a></div>',
-			left:30,
-			bottom: function(page) {
-				return '<div class="page-number">This is page '+(page+1)+'</div>'
-			},
-			right:30,
-			frame:isConverter ? 0 : true,
-			spacing:isConverter ? 0 : 20,
-			landscape: opt('landscape')
-		});
-
-		if (!isConverter) {
-			$('body, html').css('background-color','#ccc');
-			$('.center').width(page.width);
-		}
-
-		window.status = 'ready';
-	})();</script>
+		window.render();
+	</script>
 </body>
 </html>
