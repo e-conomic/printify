@@ -1,0 +1,190 @@
+<!doctype html>
+<html>
+<head>
+	<title>example invoice app</title>
+	<meta charset='utf-8'>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+	<script src="http://cdn.aldu.net/jquery.autosize/1.10/jquery.autosize.min.js"></script>
+	<script src="printify.js"></script>
+	<style>
+		body, html {
+			margin: 0;
+			padding: 0;
+			font-family: helvetica;
+			background-color: #ccc;
+		}
+
+		.page-frame {
+			border: 1px solid #ccc;
+			margin-left: -1px;
+			margin-top: -1px;
+			-webkit-box-shadow: 0 0 5px #888;
+			-moz-box-shadow: 0 0 5px #888;
+			background-color: white;
+		}
+
+		.center {
+			margin: auto;
+		}
+
+		.page-number {
+			font-size: 12px;
+			margin-bottom: 20px;
+			text-align: center;
+			color: #666;
+		}
+
+		textarea {
+			border: 1px solid transparent;
+			resize: none;
+			outline: none;
+			cursor: pointer;
+			font-size: 15px;
+			line-height: 18px;
+			height: 18px;
+			padding: 2px;
+		}
+
+		textarea:hover, textarea:focus {
+			border: 1px solid #ccc;
+		}
+
+		textarea.h2 {
+			padding: 10px;
+			font-size: 25px;
+			line-height: 30px;
+			height: 30px;
+			font-weight: bold;
+		}
+
+		.company-info, .invoice-info {
+			width: 50%;
+			float: left;
+		}
+
+		.page-break {
+			clear: both;
+		}
+
+		.company-info textarea {
+			width: 100%;
+		}
+
+		.address {
+			padding: 8px;
+		}
+
+		.invoice-info {
+			text-align: right;
+		}
+		.invoice-details {
+			padding: 8px;
+			text-align: right;
+		}
+
+		.invoice-info textarea {
+			text-align: right;
+		}
+
+		.invoice-lines {
+			margin-top: 50px;
+		}
+
+		.invoice-line {
+			border: 1px solid #ccc;
+			padding: 5px;
+			margin-bottom: 5px;
+		}
+
+		.invoice-line .field {
+			float: left;
+		}
+
+	</style>
+</head>
+<body>
+	<div class="center">
+		<div class="invoice">
+			<div class="company-info">
+				<textarea class="h2">Your company name</textarea>
+				<div class="address">
+					<textarea>10b Wildersgade</textarea>
+					<textarea>København K</textarea>
+					<textarea>Danmark</textarea>
+				</div>
+			</div>
+			<div class="invoice-info">
+				<textarea class="h2" id="invoice-number">INVOICE #1</textarea>
+				<div class="invoice-details">
+					<textarea>07/06/2013</textarea>
+					<textarea style="font-weight: bold;">Att. John Jensen</textarea>
+				</div>
+			</div>
+			<div class="page-break"></div>
+			<div style="width: 50%; float: left;">
+				<div style="padding: 10px; margin-bottom: 30px;">
+					<textarea style="width: 100%; text-align: left;">This is an invoice for stuff that you have bought</textarea>
+				</div>
+			</div>
+			<div style="width:50%; float: right">
+				<img src="http://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Coca-Cola_logo.svg/800px-Coca-Cola_logo.svg.png" style="width: 100%">
+			</div>
+			<div class="page-break"></div>
+			<div class="invoice-lines">
+				<div class="invoice-line">
+					<div class="field">
+						<textarea>Kødpålæg</textarea>
+					</div>
+					<div class="field">
+						<textarea>42 stk</textarea>
+					</div>
+					<div class="field" style="float: right">
+						<textarea style="text-align: right">3244 kr</textarea>
+					</div>
+					<div style="clear: both"></div>
+				</div>
+				<div class="page-break"></div>
+			</div>
+			<button id="add-line" style="height: 30px; margin-top: 10px;">Add new invoice line</button>
+		</div>
+	</div>
+	<script>
+		var render = function() {
+			var page = printify('.invoice', {
+				top:60,
+				left:30,
+				bottom: function(page) {
+					return '<div class="page-number">This is page '+(page+1)+'</div>'
+				},
+				right:30,
+				frame:true,
+				spacing:20
+			});
+
+			$('.center').width(page.width);
+		};
+
+		var template = $('.invoice-lines').html();
+		$('textarea').autosize();
+
+		var addLine = function() {
+			var $template = $(template);
+			$('.invoice-lines').append($template);
+			$template.find('textarea').autosize();
+			render();
+		}
+
+		$('body').on('keydown', function(e) {
+			if (e.ctrlKey && e.which === 80) render();
+			if (e.ctrlKey && e.which === 13) addLine();
+		});
+		$('body').on('keyup', function(e) {
+			if (e.which === 13) render();
+		});
+
+		$('#add-line').on('click', addLine);
+
+		render();
+	</script>
+</body>
+</html>
