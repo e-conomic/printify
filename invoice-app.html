@@ -45,6 +45,10 @@
 			padding: 2px;
 		}
 
+		#company-logo {
+			cursor: pointer;
+		}
+
 		textarea:hover, textarea:focus {
 			border: 1px solid #ccc;
 		}
@@ -115,19 +119,19 @@
 			</div>
 			<div class="invoice-info">
 				<textarea class="h2" id="invoice-number">INVOICE #1</textarea>
+				<div style="padding: 10px; padding-right: 0">
+					<img id="company-logo" src="http://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Coca-Cola_logo.svg/800px-Coca-Cola_logo.svg.png" style="width: 100%">
+				</div>
 				<div class="invoice-details">
 					<textarea>07/06/2013</textarea>
 					<textarea style="font-weight: bold;">Att. John Jensen</textarea>
 				</div>
 			</div>
 			<div class="page-break"></div>
-			<div style="width: 50%; float: left;">
+			<div style="width: 100%;">
 				<div style="padding: 10px; margin-bottom: 30px;">
 					<textarea style="width: 100%; text-align: left;">This is an invoice for stuff that you have bought</textarea>
 				</div>
-			</div>
-			<div style="width:50%; float: right">
-				<img src="http://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Coca-Cola_logo.svg/800px-Coca-Cola_logo.svg.png" style="width: 100%">
 			</div>
 			<div class="page-break"></div>
 			<div class="invoice-lines">
@@ -183,6 +187,12 @@
 		});
 
 		$('#add-line').on('click', addLine);
+
+		$('#company-logo').on('click', function() {
+			$(this).attr('src', prompt('Enter a new href', $(this).attr('src')));
+		});
+
+		$('#company-logo').on('load', render);
 
 		render();
 	</script>
