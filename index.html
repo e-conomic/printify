@@ -355,6 +355,7 @@
 	<script>
 		window.render = function() {
 			$('a').on('click', function() {
+				if ((''+this.href).indexOf('#') === -1) return;
 				setTimeout(function() {
 					window.location.reload();
 				}, 10);
