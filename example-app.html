@@ -4,6 +4,7 @@
 	<title>example invoice app</title>
 	<meta charset='utf-8'>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+	<script src="http://cdn.aldu.net/jquery.autosize/1.10/jquery.autosize.min.js"></script>
 	<script src="printify.js"></script>
 	<style>
 		body, html {
@@ -85,6 +86,10 @@
 			text-align: right;
 		}
 
+		.invoice-lines {
+			margin-top: 50px;
+		}
+
 		.invoice-line {
 			border: 1px solid #ccc;
 			padding: 5px;
@@ -116,9 +121,15 @@
 				</div>
 			</div>
 			<div class="page-break"></div>
-			<div style="width: 100%; padding: 10px; margin-bottom: 30px;">
-				<textarea style="width: 100%; text-align: left;">This is an invoice for stuff that you have bought</textarea>
+			<div style="width: 50%; float: left;">
+				<div style="padding: 10px; margin-bottom: 30px;">
+					<textarea style="width: 100%; text-align: left;">This is an invoice for stuff that you have bought</textarea>
+				</div>
 			</div>
+			<div style="width:50%; float: right">
+				<img src="http://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Coca-Cola_logo.svg/800px-Coca-Cola_logo.svg.png" style="width: 100%">
+			</div>
+			<div class="page-break"></div>
 			<div class="invoice-lines">
 				<div class="invoice-line">
 					<div class="field">
@@ -154,14 +165,21 @@
 		};
 
 		var template = $('.invoice-lines').html();
+		$('textarea').autosize();
 
 		var addLine = function() {
-			$('.invoice-lines').append(template);
+			var $template = $(template);
+			$('.invoice-lines').append($template);
+			$template.find('textarea').autosize();
 			render();
 		}
 
 		$('body').on('keydown', function(e) {
+			if (e.ctrlKey && e.which === 80) render();
 			if (e.ctrlKey && e.which === 13) addLine();
+		});
+		$('body').on('keyup', function(e) {
+			if (e.which === 13) render();
 		});
 
 		$('#add-line').on('click', addLine);
