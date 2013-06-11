@@ -91,7 +91,7 @@ window.printify = function() {
 
 					$left.add($right).css({
 						top:pageTop + spacing,
-						height:pageTopNext - pageTop
+						height:pageTopNext - pageTop - spacing
 					});
 
 					$top.css({top:pageTop + spacing});
