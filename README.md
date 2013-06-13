@@ -26,4 +26,11 @@ printify('#my-content', {
 })
 ```
 
+## Protips
+
+To get the best results when printing using phantomjs follow these guidelines
+
+	* in headers, footers use padding instead of margin if possible
+	* when using a tr as a page-break use __2__ in a row like so `<tr class="page-break"></tr><tr class="page-break"></tr>`
+
 *Happy printing!*
