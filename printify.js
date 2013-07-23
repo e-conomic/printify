@@ -69,7 +69,7 @@ window.printify = function() {
 
 		var update = function() {
 			var $prev;
-			return until(Array.prototype.slice.apply($('.page-break:not(.page-break-visited)')), function(el) {
+			return until(Array.prototype.slice.apply($content.find('.page-break:not(.page-break-visited)')), function(el) {
 				var $el = $(el);
 				if ($el.offset().top - contentOffset > nextBreak && $prev) {
 					onbeforebreak($prev, nextPage);
