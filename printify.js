@@ -51,7 +51,8 @@ window.printify = function() {
 		var pageHeight = pixels(options.pageHeight || '29.7cm');
 		var pageWidth = pixels(options.pageWidth || '21cm');
 		var spacing = options.spacing || 0;
-		var onbreak = options.pageBreak || noop;
+		var onbeforebreak = options.beforeBreak || noop;
+		var onafterbreak = options.afterBreak || noop;
 
 		if (options.landscape) {
 			var tmp = pageHeight;
@@ -68,9 +69,11 @@ window.printify = function() {
 
 		var update = function() {
 			var $prev;
-			return until(Array.prototype.slice.apply($('.page-break:not(.page-break-visited)')), function(el) {
+			return until(Array.prototype.slice.apply($content.find('.page-break:not(.page-break-visited)')), function(el) {
 				var $el = $(el);
 				if ($el.offset().top - contentOffset > nextBreak && $prev) {
+					onbeforebreak($prev, nextPage);
+
 					var $top = $('<div class="page-top">'+(options.top(nextPage) || '')+'</div>').appendTo($content);
 					var $bottom = $('<div class="page-bottom">'+(options.bottom(nextPage) || '')+'</div>').appendTo($content);
 					var $left = $('<div class="page-left">'+(options.left(nextPage) || '')+'</div>').appendTo($content);
@@ -91,7 +94,7 @@ window.printify = function() {
 
 					$left.add($right).css({
 						top:pageTop + spacing,
-						height:pageTopNext - pageTop
+						height:pageTopNext - pageTop - spacing
 					});
 
 					$top.css({top:pageTop + spacing});
@@ -104,6 +107,12 @@ window.printify = function() {
 
 					var breakHeight = spacing + $top.height() + pageTop - ($prev.offset().top - contentOffset);
 					$prev.height(breakHeight).addClass('page-actual-break');
+
+					if ($prev.prev().hasClass('page-break') && !$prev.prev().hasClass('page-actual-break')) {
+						$prev.prev().height(breakHeight - $top.height()).addClass('page-actual-break');
+						$prev.height($top.height());
+					}
+
 					$el.removeClass('page-break-visited');
 
 					if (options.frame) {
@@ -119,7 +128,7 @@ window.printify = function() {
 						$frame.appendTo($content);
 					}
 
-					onbreak($prev, nextPage);
+					onafterbreak($prev, nextPage);
 
 					nextPage++;
 					nextBreak = pageTopNext - $bottom.height();
